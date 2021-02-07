@@ -27,7 +27,7 @@
 <script>
 import {getHomeMultidata,getHomeGoods} from 'network/home'
 
-import {debounce} from 'common/utils.js'
+import { itemListenerMixin, backTopMixin } from "common/mixin.js";
 
 import HomeSwiper from './childComps/HomeSwiper.vue'
 import RecommendView from './childComps/RecommendView.vue'
@@ -37,7 +37,6 @@ import NavBar from 'components/common/navbar/NavBar'
 import TabControl from 'components/content/tabControl/TabControl.vue'
 import GoodsList from 'components/content/goods/GoodsList.vue'
 import Scroll from 'components/common/scroll/Scroll.vue'
-import BackTop from 'components/content/backTop/BackTop.vue'
 
 
 
@@ -51,8 +50,8 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop,
-    },
+  },
+  mixins:[itemListenerMixin,backTopMixin],
   data(){
     return{
       banners:[],
@@ -63,7 +62,6 @@ export default {
         'sell':{page:0,list:[]}
       },
       currentType:'pop',
-      isShowBackTop:false,
       tabOffsetTop:0,
       isTabFixed:false,
       saveY:0,
@@ -82,15 +80,11 @@ export default {
     this.getHomeGoods('sell');
   },
   mounted(){
-    // 图片
-    const refresh=debounce(this.$refs.scroll.refresh,500)
-    this.$bus.$on('itemImageLoad',()=>{
-      refresh() 
-    })
   },
   deactivated(){
     this.saveY=this.$refs.scroll.getScrollY()
-    // console.log(this.saveY)
+    // 取消全局监听
+    this.$bus.$off('itemImageLoad',this.itemImgListener)
   },
   activated(){
     this.$refs.scroll.scrollTo(0,this.saveY,0)
@@ -131,14 +125,11 @@ export default {
       this.$refs.tabControl1.currentIndex=index;
       this.$refs.tabControl2.currentIndex=index;
     },
-    backClick(){
-      this.$refs.scroll.scrollTo(0,0,500)
-    },
     contentScroll(position){
       // 1.判断是否显示
       this.isShowBackTop = -position.y > 1000 ? true : false ;
        //2.判断是否吸顶（position:fixed）
-       this.isTabFixed= -position.y >546 ? true : false
+       this.isTabFixed= -position.y >616 ? true : false
     },
     loadMore(){
       this.getHomeGoods(this.currentType);
@@ -171,7 +162,7 @@ export default {
   overflow: hidden;
 
   position: absolute;
-  top: 44px;
+  top: 45px;
   bottom: 49px;
   left: 0;
   right: 0;

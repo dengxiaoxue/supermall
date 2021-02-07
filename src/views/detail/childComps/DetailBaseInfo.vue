@@ -50,8 +50,8 @@ export default {
 }
 
 .info-price .n-price{
-  font-size: 24px;
-  color: var(--color-height-text);
+  font-size: 23px;
+  color: rgb(218, 6, 6);
 }
 
 .info-price .o-price{
@@ -64,7 +64,7 @@ export default {
   font-size: 12px;
   padding: 2px 5px;
   color: #fff;
-  background-color: var(--color-height-text);
+  background-color: rgb(218, 6, 6);
   border-radius: 8px;
   margin-left: 5px;
 
@@ -96,7 +96,7 @@ export default {
 }
 
 .info-service-item span{
-  font-size: 13px;
+  font-size: 12px;
   color: #333;
 }
 </style>
